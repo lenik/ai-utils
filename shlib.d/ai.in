@@ -1,0 +1,14 @@
+# -*- mode: sh -*-
+# vim: set filetype=sh :
+
+datadir=@datadir@
+docdir=@datadir@/doc
+
+function ..() {
+    local f
+    for f in "$@"; do
+        . <(unai -c "$f")
+    done
+}
+
+.. "${BASH_SOURCE[0]}.img"
