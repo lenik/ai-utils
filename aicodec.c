@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <bas/file.h>
-#include <bas/log.h>
+#include <bas/io/file.h>
+#include <bas/log/log.h>
 
 #include "ai.h"
 
@@ -28,8 +28,8 @@ char *parse_stab(char *map8, const char *stab) {
     while (i < len) {
         char a = stab[i++];
         char b = stab[i++];
-        map8[a] = b;
-        map8[b] = a;
+        map8[(unsigned char) a] = b;
+        map8[(unsigned char) b] = a;
     }
     return map8;
 }
@@ -37,7 +37,7 @@ char *parse_stab(char *map8, const char *stab) {
 char *format_stab(char *stab, const char *map8) {
     int a, i = 0;
     for (a = 0; a < 256; a++) {
-        char b = map8[a];
+        char b = map8[(unsigned char) a];
         if (b == 0 || a >= b)
             continue;
         stab[i++] = a;
@@ -52,7 +52,7 @@ static void *_ai_decode(const char *in_buf, size_t size,
                         const char *keydata, size_t keysize) {
     const char *end;                    /* end of the image */
     char *out_buf = NULL;               /* if out==NULL, write to this buf */
-    char *outp;
+    char *outp = NULL;
     char *frame_image = NULL;
     int frame_bits = 0;                 /* Useful bits in a single frame */
     char map8[256];                     /* mapping rebuilt from first frames */
@@ -99,8 +99,8 @@ static void *_ai_decode(const char *in_buf, size_t size,
         char b = frame1[i];
         if (a != b) {
             bool swapped = bits++ & 1;
-            map8[a] = b;
-            map8[b] = a;
+            map8[(unsigned char) a] = b;
+            map8[(unsigned char) b] = a;
 
             if (swapped)
                 frame_image[i] = b;
@@ -142,7 +142,7 @@ static void *_ai_decode(const char *in_buf, size_t size,
 
         for (i = 0; i < len; i++) {
             char a = frame[i];
-            char b = map8[a];
+            char b = map8[(unsigned char) a];
             if (b != 0 && a != b) {
                 byt <<= 1;
                 if (a != frame_image[i])
@@ -202,8 +202,9 @@ static void *_ai_decode(const char *in_buf, size_t size,
         fid++;
     }
 
-    if (sum != hdr.checksum)
+    if (sum != hdr.checksum) {
         log_err("File checksum failed.");
+    }
 
     log_debug("Decoded bytes=%d last byte=%02x bits=%d checksum=%xh",
               cb, byt, bits, sum);
@@ -284,8 +285,8 @@ bool ai_encode_file(const char *in_path, FILE *in,
     for (; frame < 2; frame++) {
         t = frame_image;
         frame_bits = 0;
-        while (a = *t++) {
-            if ((b = stab[a])) {        /* char is defined in the stab */
+        while ((a = *t++)) {
+            if ((b = stab[(unsigned char) a])) {        /* char is defined in the stab */
                 bool swap = frame_bits++ & 1;
                 if (frame == 1)
                     swap = !swap;
@@ -332,8 +333,8 @@ bool ai_encode_file(const char *in_path, FILE *in,
 
     while (p < end || bits > 0) {
         t = frame_image;
-        while (a = *t++) {
-            if ((b = stab[a])) {
+        while ((a = *t++)) {
+            if ((b = stab[(unsigned char) a])) {
                 /* a useful bit cell. */
 
                 if (bits == 0) {        /* load the next byte. */

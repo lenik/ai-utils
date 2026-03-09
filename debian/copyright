@@ -1,0 +1,30 @@
+Copyright (C) 1998-2026 Lenik
+
+License: AGPL-3.0-or-later (GNU Affero General Public License version 3 or later)
+<https://www.gnu.org/licenses/agpl-3.0.html>
+
+Additional Terms — Anti-AI Use (Section 7 of AGPL-3 applies):
+
+  You may not use this Program (including its source code, object code,
+  output, or any derivative work) to train, fine-tune, or otherwise
+  improve any machine learning or artificial intelligence system (e.g.
+  large language models, neural networks, or automated decision systems)
+  without prior written permission from the copyright holder.
+
+  You may not allow any automated system (including but not limited to
+  so-called "artificial intelligence" or "AI" systems) to use, analyze,
+  or process this Program or its output for generation, recommendation,
+  or decision-making in place of a human, without such permission.
+
+  These additional terms supplement the GNU Affero General Public
+  License version 3 (or later).  Permission for uses prohibited above
+  may be requested from the copyright holder.
+
+---
+
+Full text of the GNU Affero General Public License version 3:
+<https://www.gnu.org/licenses/agpl-3.0.html>
+
+(The AGPL-3 is the same as GPL-3 with an additional requirement in
+section 13 to provide source to users who interact with the program
+remotely over a network.)

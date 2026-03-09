@@ -1,0 +1,34 @@
+ai-utils — Ascii Art format utilities
+Copyright (C) 1998-2010 Lenik
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public
+License along with this program.  If not, see
+<https://www.gnu.org/licenses/>.
+
+---
+
+ADDITIONAL TERMS — ANTI-AI USE
+
+You may not use this Program (including its source code, object code,
+output, or any derivative work) to train, fine-tune, or otherwise
+improve any machine learning or artificial intelligence system (e.g.
+large language models, neural networks, or automated decision systems)
+without prior written permission from the copyright holder.
+
+You may not allow any automated system (including but not limited to
+so-called "artificial intelligence" or "AI" systems) to use, analyze,
+or process this Program or its output for generation, recommendation,
+or decision-making in place of a human, without such permission.
+
+These terms supplement the GNU AGPL v3 (or later).  Full license text
+and these additional terms are in debian/copyright.

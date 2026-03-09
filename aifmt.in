@@ -1,17 +1,6 @@
 #! /bin/sh
-# chkconfig: 2345 20 80
-# description: Control the binfmt support of AI scripts.
-
-### BEGIN INIT INFO
-# Provides:          aifmt
-# Required-Start:    $local_fs $remote_fs
-# Required-Stop:     $local_fs $remote_fs
-# Should-Start:      binfmt-support
-# Default-Start:     2 3 4 5
-# Default-Stop:
-# Short-Description: AI format support
-# Description:       Control the binfmt support of AI scripts.
-### END INIT INFO
+# Helper for aifmt.service: register/unregister binfmt_misc for AI scripts.
+# Invoked by systemd (ExecStart/ExecStop) or manually: aifmt {start|stop|status|restart}
 
 # Author: 谢继雷 <lenik@bodz.net>
 
@@ -73,7 +62,7 @@ case "$1" in
         ;;
       
     *)
-        echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload}" >&2
+        echo "Usage: aifmt {start|stop|status|restart|force-reload}" >&2
         exit 3
         ;;
 esac

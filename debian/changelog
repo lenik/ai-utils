@@ -1,0 +1,25 @@
+ai-utils (2.2.0) testing; urgency=medium
+
+  * Refactor build to Meson (was Autotools).
+  * Use config.h for build-time paths/version instead of .c.in -> .c.
+  * Add README.md. Bump version to 2.2.0.
+
+ -- Lenik (谢继雷) <lenik@bodz.net>  Mon, 09 Mar 2026 00:00:00 +0800
+
+ai-utils (2.1.7-1) testing; urgency=medium
+
+  * Upstream updates, by xjl-cooldeb
+
+ -- Lenik (谢继雷) <lenik@bodz.net>  Sun, 08 Mar 2026 22:57:39 +0800
+
+ai-utils (2.1.5-1) testing; urgency=medium
+
+  * Debian package initial, by xjl-cooldeb
+
+ -- Lenik (谢继雷) <lenik@bodz.net>  Thu, 01 Jun 2023 11:05:23 +0800
+
+ai-utils (0.0.1-1) testing; urgency=low
+
+  * Debian package initial, by xjl-cooldeb
+
+ -- Lenik (谢继雷) <lenik@bodz.net>  Thu, 01 Jun 2023 11:05:23 +0800

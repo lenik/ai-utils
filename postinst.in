@@ -1,29 +1,13 @@
 #!/bin/sh
 # master-file
+# Enable and start aifmt (binfmt_misc for AI scripts) via systemd.
 
-# The Debian way won't work in Fedora/RHEL, etc.
-# Because binfmts-support isn't available.
-#    if which update-binfmts >/dev/null; then
-#        update-binfmts --import aiscript
-#        exit 0
-#    fi
-
-# so we'll use sysvinit to control the binfmt_misc fs.
-
-if [ -f @sysconfdir@/rc.d/init.d ]; then # RHEL
-    initdir=@sysconfdir@/rc.d/init.d
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl daemon-reload
+    systemctl enable aifmt.service
+    systemctl start aifmt.service
 else
-    initdir=@sysconfdir@/init.d
+    echo "systemd not found; aifmt.service was not enabled. Run @pkgdatadir@/aifmt start manually if needed." >&2
 fi
-
-cp @pkgdatadir@/aifmt $initdir
-
-if which update-rc.d >/dev/null 2>&1; then
-    update-rc.d aifmt defaults
-else
-    chkconfig --add aifmt
-fi
-
-$initdir/aifmt start >/dev/null
 
 exit 0

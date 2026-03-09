@@ -1,25 +1,13 @@
 #!/bin/sh
 # master-file
+# Disable and stop aifmt (binfmt_misc) via systemd.
 
-# The Debian way won't work in Fedora/RHEL, etc.
-# Because binfmts-support isn't available.
-#    if which update-binfmts >/dev/null; then
-#        update-binfmts --remove aiscript "@bindir@/ai-runner"
-#    fi
-
-# so we'll use sysvinit to control the binfmt_misc fs.
-if [ -f @sysconfdir@/rc.d/init.d ]; then # RHEL
-    initdir=@sysconfdir@/rc.d/init.d
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl stop aifmt.service
+    systemctl disable aifmt.service
+    systemctl daemon-reload
 else
-    initdir=@sysconfdir@/init.d
-fi
-
-$initdir/aifmt stop >/dev/null
-
-if which update-rc.d >/dev/null 2>&1; then
-    update-rc.d aifmt remove
-else
-    chkconfig --del aifmt
+    @pkgdatadir@/aifmt stop 2>/dev/null || true
 fi
 
 exit 0

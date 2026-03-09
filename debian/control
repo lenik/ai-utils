@@ -2,7 +2,14 @@ Source: ai-utils
 Section: utils
 Priority: optional
 Maintainer: Lenik (谢继雷) <lenik@bodz.net>
-Build-Depends: debhelper-compat (= 13)
+Build-Depends:
+    debhelper-compat (= 13),
+    meson,
+    ninja-build,
+    pkg-config,
+    libglib2.0-dev,
+    libbas-c-dev (>= 1.0.0),
+    libsystemd-dev,
 Standards-Version: 3.9.4
 Homepage: http://uni.bodz.net/crypt/ai-utils
 Vcs-Git: git://git.bodz.net/uni.git
@@ -11,9 +18,9 @@ Vcs-Browser: http://git.bodz.net/uni/crypt/ai-utils
 Package: ai-utils
 Architecture: any
 Depends:
-    libbas-c,
     air,
-    ${misc:Depends}
+    ${misc:Depends},
+    ${shlibs:Depends}
 Description: Ascii Art format utilities
     Encode or decode data in repeated sequence of a pre-defined ascii art 
     picture.
@@ -21,6 +28,7 @@ Description: Ascii Art format utilities
 Package: air
 Architecture: any
 Depends:
-    libbas-c,
-    ${misc:Depends}
+    libbas-c1,
+    ${misc:Depends},
+    ${shlibs:Depends}
 Description: Provides support of AI executable.

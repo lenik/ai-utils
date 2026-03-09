@@ -1,8 +1,10 @@
 #include <assert.h>
 #include <glib.h>
 
-#include <bas/cli.h>
-#include <bas/file.h>
+#include <bas/cli/program.h>
+#include <bas/io/file.h>
+#include <bas/base/str.h>
+#include <bas/log/log.h>
 
 #include "config.h"
 #include "ai.h"
@@ -10,7 +12,7 @@
 static GOptionEntry options[] = {
     OPTION('c', "stdout", "Write to stdout instead of the file"),
     OPTION('k', "keep", "Keep the original files, don't delete them"),
-    OPTARG('i', "keyfile", "A data file contains the key for encryption"),
+    OPTARG('i', "keyfile", "A data file contains the key for encryption", "FILE"),
 
     OPTION('f', "force", "Force to overwrite existing files"),
     OPTION('q', "quiet", "Show less verbose info"),
@@ -97,7 +99,7 @@ int main(int argc, char **argv) {
         int len = strlen(path);
         char out_path[PATH_MAX];
         FILE *in;
-        FILE *out;
+        FILE *out = stdout;
         if (strcmp(path, "-") == 0) {
             in = stdin;
             path = "<stdin>";
@@ -110,7 +112,6 @@ int main(int argc, char **argv) {
         }
 
         if (opt_stdout) {
-            out = stdout;
             strcpy(out_path, "<stdout>");
         } else {
             strcpy(out_path, path);
@@ -119,6 +120,11 @@ int main(int argc, char **argv) {
                 out_path[len - 4] = '\0';
             else {
                 log_err("Invalid image extension: %s", path);
+                continue;
+            }
+            out = fopen(out_path, "wb");
+            if (out == NULL) {
+                log_perr("Open file %s: ", out_path);
                 continue;
             }
         }

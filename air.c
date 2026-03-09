@@ -7,8 +7,9 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <bas/file.h>
-#include <bas/log.h>
+#include <bas/io/file.h>
+#include <bas/log/log.h>
+#include <bas/proc/env.h>
 
 #include "ai.h"
 
@@ -34,7 +35,7 @@ void del_dtemp() {
 }
 
 int main(int argc, char **argv) {
-    char cmd_buf[1024];
+    // char cmd_buf[1024];
     char buf[4096];
     //char *p;
     char **pp;
@@ -58,7 +59,7 @@ int main(int argc, char **argv) {
 
         if (strcmp(arg, "version") == 0) {
             printf("[air] AI image runner\n");
-            printf("Written by Lenik, Version @VERSION@, Last updated at @DATE@\n");
+            printf("Written by Lenik, Version %s, Last updated at %s\n", PACKAGE_VERSION, BUILD_DATE);
             return 0;
         }
         
@@ -153,6 +154,7 @@ int main(int argc, char **argv) {
     s_argv = malloc(sizeof(char *) * (argc + 10));
     char **sa = s_argv;
 
+    char tmp[PATH_MAX];
                                         /* script / binary? */
     if (data[0] == '#' && data[1] == '!') {
         /* copy the first line to buf */
@@ -177,7 +179,7 @@ int main(int argc, char **argv) {
 
         /* OPTIM: try to create a symlink to the pipe. */
         if (opt_pipesym) {
-            if (!mkdtemp(dtemp)) {
+            if (!EMKDTEMP(dtemp)) {
                 log_err("Failed to create tmp dir");
                 goto err;
             } else {
@@ -198,8 +200,7 @@ int main(int argc, char **argv) {
         *sa++ = program;                /* display name */
 
         /* decode into a tmp file, run it then. */
-        char *tmp = tempnam(NULL, "");  /* allocated */
-        FILE *out = fopen(tmp, "wb");
+        FILE *out = EMKTEMP_OPEN(tmp);
         if (out == NULL) {
             perror("Can't write to tmp file");
             goto err;

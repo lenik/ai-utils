@@ -1,14 +1,16 @@
 #include <assert.h>
 #include <glib.h>
 
-#include <bas/cli.h>
-#include <bas/file.h>
-#include <bas/stdio.h>
+#include <bas/cli/program.h>
+#include <bas/io/file.h>
+#include <bas/base/stdio.h>
+#include <bas/base/str.h>
+#include <bas/log/log.h>
 
 #include "config.h"
 #include "ai.h"
 
-#define TEMPLATE_DIR "@templatedir@"
+/* TEMPLATE_DIR from config.h */
 #define DEFAULT_TEMPLATE "grid"
 
 #define ASCII_L1 10
@@ -18,11 +20,11 @@
 static GOptionEntry options[] = {
     OPTION('c', "stdout", "Write to stdout instead of the file"),
     OPTION('k', "keep", "Keep the original files, don't delete them"),
-    OPTARG('t', "template", "Specify the template ascii art image"),
-    OPTARG('i', "keyfile", "A data file contains the key for encryption"),
+    OPTARG('t', "template", "Specify the template ascii art image", "FILE"),
+    OPTARG('i', "keyfile", "A data file contains the key for encryption", "FILE"),
 
-    OPTARG('s', "stab", "Specify the substitution table"),
-    OPTARG('a', "ascii", "Specify encode level for ASCII-7 charset"),
+    OPTARG('s', "stab", "Specify the substitution table", "FILE"),
+    OPTARG('a', "ascii", "Specify encode level for ASCII-7 charset", "LEVEL"),
     OPTION('u', "utf-8", "Using UTF-8 charset"),
 
     OPTION('f', "force", "Force to overwrite existing files"),
@@ -186,7 +188,7 @@ int main(int argc, char **argv) {
         char *p = template_image;
         char ch;
         while ((ch = *p++)) {
-            if (opt_stab8[ch])
+            if (opt_stab8[(unsigned char) ch])
                 template_bits++;
         }
 
@@ -203,7 +205,6 @@ int main(int argc, char **argv) {
         argv++;
 
         char *path = *argv;
-        int len = strlen(path);
         char out_path[PATH_MAX];
         FILE *in;
         FILE *out;

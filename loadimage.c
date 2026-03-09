@@ -1,21 +1,23 @@
 #include "config.h"
 
+#include <assert.h>
 #include <limits.h>
 #include <stdio.h>
 
 #include <builtins.h>
 #include <builtins/bashgetopt.h>
 #include <shell.h>
+#include <builtins/common.h>
 
-#include <bas/file.h>
-#include <bas/log.h>
-#include <bas/str.h>
+#include <bas/io/file.h>
+#include <bas/log/log.h>
+#include <bas/base/str.h>
 
 #include "ai.h"
 
 #define log log_debug
 
-char *datadir = "@datadir@";
+char *datadir = DATADIR;
 
 static bool exists(const char *file) {
     if (access(file, R_OK) == 0) {
@@ -29,8 +31,9 @@ static bool exists(const char *file) {
 
 static char *getvar(const char *name) {
     char *value = get_string_value(name);
-    if (value)
+    if (value) {
         log("Variable %s = %s.", name, value);
+    }
     return value;
 }
 
@@ -48,7 +51,6 @@ int loadimage_builtin(WORD_LIST *options) {
     
     int opt;
     SHELL_VAR *var;
-    int i;
     
     reset_internal_getopt();
     while ((opt = internal_getopt(options, "")) != -1) {
@@ -105,12 +107,13 @@ int loadimage_builtin(WORD_LIST *options) {
     char *p;
     strcpy(dir, caller);
     
-    if (p = endswith(dir, ".in"))
+    if ((p = endswith(dir, ".in"))) {
         *p = '\0';
-    if (p = endswith(dir, ".ain"))
+    }
+    if ((p = endswith(dir, ".ain"))) {
         *p = '\0';
-    
-    if (p = strrchr(dir, '/')) {
+    }
+    if ((p = strrchr(dir, '/'))) {
         *p = '\0';
         strcpy(base, p + 1);
     } else {
@@ -121,7 +124,8 @@ int loadimage_builtin(WORD_LIST *options) {
     log("caller.base: %s", base);
     
     char file[PATH_MAX];
-    sprintf(file, "%s/%s.img.ain", dir, base);
+    int len = snprintf(file, sizeof(file), "%s/%s.img.ain", dir, base);
+    assert(len < sizeof(file));
     if (exists(file)) {
         source_file(file, 0);
         return EXECUTION_SUCCESS;
@@ -129,19 +133,23 @@ int loadimage_builtin(WORD_LIST *options) {
 
     bool no_match = false;
     do {
-        sprintf(file, "%s/%s.img", dir, base);
+        len = snprintf(file, sizeof(file), "%s/%s.img", dir, base);
+        assert(len < sizeof(file));
         if (exists(file))
             break;
         
-        sprintf(file, "%s/.%s.img", dir, base);
+        len = snprintf(file, sizeof(file), "%s/.%s.img", dir, base);
+        assert(len < sizeof(file));
         if (exists(file))
             break;
         
-        sprintf(file, "%s/%s/%s.img", datadir, pkg, base);
+        len = snprintf(file, sizeof(file), "%s/%s/%s.img", datadir, pkg, base);
+        assert(len < sizeof(file));
         if (exists(file))
             break;
         
-        sprintf(file, "%s/%s/image/%s.img", datadir, pkg, base);
+        len = snprintf(file, sizeof(file), "%s/%s/image/%s.img", datadir, pkg, base);
+        assert(len < sizeof(file));
         if (exists(file))
             break;
 

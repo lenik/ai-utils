@@ -1,6 +1,7 @@
 usr/bin/air
-usr/lib/loadimage
+usr/lib/*/libloadimage.so
 usr/lib/shlib.d/
+usr/lib/systemd/system/aifmt.service
 usr/share/ai-utils/aifmt
 usr/share/man/man1/air.1
 usr/share/setup/ai-utils/
